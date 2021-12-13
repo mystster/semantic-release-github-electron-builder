@@ -1,20 +1,16 @@
 {
-  "name": "@semantic-release/github",
-  "description": "semantic-release plugin to publish a GitHub release and comment on released Pull Requests/Issues",
-  "version": "0.0.0-development",
-  "author": "Pierre Vanduynslager (https://twitter.com/@pvdlg_)",
+  "name": "semantic-release-github-electron-builder",
+  "description": "semantic-release plugin to publish a GitHub release and comment on released Pull Requests/Issues for Electron builder apps",
+  "version": "0.0.1-development",
+  "author": "mystster",
   "ava": {
     "files": [
       "test/**/*.test.js"
     ]
   },
   "bugs": {
-    "url": "https://github.com/semantic-release/github/issues"
+    "url": "https://github.com/mystster/semantic-release-github-electron-builder/issues"
   },
-  "contributors": [
-    "Stephan Bönnemann <stephan@boennemann.me> (http://boennemann.me)",
-    "Gregor Martynus (https://twitter.com/gr2m)"
-  ],
   "dependencies": {
     "@octokit/rest": "^18.0.0",
     "@semantic-release/error": "^2.2.0",
@@ -54,7 +50,7 @@
     "lib",
     "index.js"
   ],
-  "homepage": "https://github.com/semantic-release/github#readme",
+  "homepage": "https://github.com/mystster/semantic-release-github-electron-builder",
   "keywords": [
     "git",
     "github",
@@ -64,7 +60,8 @@
     "pull-request",
     "release",
     "semantic-release",
-    "version"
+    "version",
+    "electron-builder"
   ],
   "license": "MIT",
   "main": "index.js",
@@ -92,7 +89,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/semantic-release/github.git"
+    "url": "https://github.com/mystster/semantic-release-github-electron-builder.git"
   },
   "scripts": {
     "codecov": "codecov -f coverage/coverage-final.json",
