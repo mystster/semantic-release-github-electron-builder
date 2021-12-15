@@ -3,6 +3,7 @@
 const {defaultTo, castArray} = require('lodash');
 const verifyGitHub = require('./lib/verify');
 const addChannelGitHub = require('./lib/add-channel');
+const prepareGitHub = require('./lib/prepare');
 const publishGitHub = require('./lib/publish');
 const successGitHub = require('./lib/success');
 const failGitHub = require('./lib/fail');
@@ -14,7 +15,7 @@ async function verifyConditions(pluginConfig, context) {
   // If the GitHub publish plugin is used and has `assets`, `successComment`, `failComment`, `failTitle`, `labels` or `assignees` configured, validate it now in order to prevent any release if the configuration is wrong
   if (options.publish) {
     const publishPlugin =
-      castArray(options.publish).find((config) => config.path && config.path === '@semantic-release/github') || {};
+      castArray(options.publish).find((config) => config.path && config.path === 'semantic-release-github-electron-builder') || {};
 
     pluginConfig.assets = defaultTo(pluginConfig.assets, publishPlugin.assets);
     pluginConfig.successComment = defaultTo(pluginConfig.successComment, publishPlugin.successComment);
@@ -26,6 +27,15 @@ async function verifyConditions(pluginConfig, context) {
 
   await verifyGitHub(pluginConfig, context);
   verified = true;
+}
+
+async function prepare(pluginConfig, context) {
+  if (!verified) {
+    await verifyGitHub(pluginConfig, context);
+    verified = true;
+  }
+
+  return prepareGitHub(pluginConfig, context);
 }
 
 async function publish(pluginConfig, context) {
@@ -64,4 +74,4 @@ async function fail(pluginConfig, context) {
   await failGitHub(pluginConfig, context);
 }
 
-module.exports = {verifyConditions, addChannel, publish, success, fail};
+module.exports = {verifyConditions, addChannel, prepare, publish, success, fail};
