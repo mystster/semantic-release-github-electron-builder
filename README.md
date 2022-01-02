@@ -1,18 +1,18 @@
-# @semantic-release/github
+#  semantic-release-github-electron-builder
 
-[**semantic-release**](https://github.com/semantic-release/semantic-release) plugin to publish a
-[GitHub release](https://help.github.com/articles/about-releases) and comment on released Pull Requests/Issues.
+### [**semantic-release**](https://github.com/semantic-release/semantic-release) plugin to publish a [GitHub release](https://help.github.com/articles/about-releases) and comment on released Pull Requests/Issues for an app ceated with [electorn-builder](https://www.electron.build/). Especially for [vite-electron-builder](https://github.com/cawa-93/vite-electron-builder) template.
+This plugin is forked from [@semantic-release/github](https://github.com/semantic-release/github). So [v9.0.0](https://github.com/mystster/semantic-release-github-electron-builder/releases/tag/v9.0.0) is initial release for this plugin. and this plugin is insired by [@semantic-release/exec](https://github.com/semantic-release/exec).
 
-[![Build Status](https://github.com/semantic-release/github/workflows/Test/badge.svg)](https://github.com/semantic-release/github/actions?query=workflow%3ATest+branch%3Amaster)
+[![Test](https://github.com/mystster/semantic-release-github-electron-builder/actions/workflows/test.yml/badge.svg)](https://github.com/mystster/semantic-release-github-electron-builder/actions/workflows/test.yml)
 
-[![npm latest version](https://img.shields.io/npm/v/@semantic-release/github/latest.svg)](https://www.npmjs.com/package/@semantic-release/github)
-[![npm next version](https://img.shields.io/npm/v/@semantic-release/github/next.svg)](https://www.npmjs.com/package/@semantic-release/github)
-[![npm beta version](https://img.shields.io/npm/v/@semantic-release/github/beta.svg)](https://www.npmjs.com/package/@semantic-release/github)
+[![npm latest version](https://img.shields.io/npm/v/semantic-release-github-electron-builder)](https://www.npmjs.com/package/semantic-release-github-electron-builder)
+
 
 | Step               | Description                                                                                                                                                                                                                              |
 |--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `verifyConditions` | Verify the presence and the validity of the authentication (set via [environment variables](#environment-variables)) and the [assets](#assets) option configuration.                                                                     |
-| `publish`          | Publish a [GitHub release](https://help.github.com/articles/about-releases), optionally uploading file assets.                                                                                                                           |
+| `prepare`          | Compile an electron builder app                                                                                |
+| `publish`          | [Publish](https://www.electron.build/configuration/publish.html) an electron-builder app with release notes. And a [GitHub release](https://help.github.com/articles/about-releases), optionally uploading file assets.                                                                                                                           |
 | `addChannel`       | Update a [GitHub release](https://help.github.com/articles/about-releases)'s `pre-release` field.                                                                                                                                        |
 | `success`          | Add a comment to each [GitHub Issue](https://help.github.com/articles/about-issues) or [Pull Request](https://help.github.com/articles/about-pull-requests) resolved by the release and close issues previously open by the `fail` step. |
 | `fail`             | Open or update a [GitHub Issue](https://help.github.com/articles/about-issues) with information about the errors that caused the release to fail.                                                                                        |
@@ -20,7 +20,7 @@
 ## Install
 
 ```bash
-$ npm install @semantic-release/github -D
+$ npm install semantic-release-github-electron-builder -D
 ```
 
 ## Usage
@@ -32,17 +32,19 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    ["@semantic-release/github", {
-      "assets": [
-        {"path": "dist/asset.min.css", "label": "CSS distribution"},
-        {"path": "dist/asset.min.js", "label": "JS distribution"}
-      ]
+    ["semantic-release-github-electron-builder", {
+      "prepareCmd": "npm run compile",
+      "publishCmd": "npm run publish"
     }],
   ]
 }
 ```
 
-With this example [GitHub releases](https://help.github.com/articles/about-releases) will be published with the file `dist/asset.min.css` and `dist/asset.min.js`.
+With this example execute below steps.
+- Compiled the electron builder app with `npm run compile` command in prepare step.
+- Setting environment variable for the electron builder app version.
+- [Publish](https://www.electron.build/configuration/publish.html) the electron builder app with`npm run publish` command.
+- [GitHub releases](https://help.github.com/articles/about-releases) will be published
 
 ## Configuration
 
@@ -75,6 +77,10 @@ If you have actions that trigger on newly created releases, please use a generat
 | `githubUrl`           | The GitHub Enterprise endpoint.                                                                                                                                                                        | `GH_URL` or `GITHUB_URL` environment variable.                                                                                                       |
 | `githubApiPathPrefix` | The GitHub Enterprise API prefix.                                                                                                                                                                      | `GH_PREFIX` or `GITHUB_PREFIX` environment variable.                                                                                                 |
 | `proxy`               | The proxy to use to access the GitHub API. Set to `false` to disable usage of proxy. See [proxy](#proxy).                                                                                                                                        | `HTTP_PROXY` environment variable.                                                                                                                   |
+| `versionVariable`     | Environment variable for store app version stirng. this value is used for electron builder app publish | `VITE_APP_VERSION`
+| `releasenotePath`     | Create release note markdown file path.this file is used for electron-builder publish command.|-|
+| `prepareCmd`          | Exec command in prepare step. This command is used for compile app. | `npm run precompile`|
+| `publishCmd`          | Exec command in publish step. This command is used for publish electron-builder| `npm run publish`|
 | `assets`              | An array of files to upload to the release. See [assets](#assets).                                                                                                                                     | -                                                                                                                                                    |
 | `successComment`      | The comment to add to each issue and pull request resolved by the release. Set to `false` to disable commenting on issues and pull requests. See [successComment](#successcomment).                    | `:tada: This issue has been resolved in version ${nextRelease.version} :tada:\n\nThe release is available on [GitHub release](<github_release_url>)` |
 | `failComment`         | The content of the issue created when a release fails. Set to `false` to disable opening an issue when a release fails. See [failComment](#failcomment).                                               | Friendly message with links to **semantic-release** documentation and support, with the list of errors that caused the release to fail.              |
